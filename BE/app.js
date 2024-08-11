@@ -2,8 +2,8 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import createError from 'http-errors';
+import bodyParser from 'body-parser';
 const app = express();
-// router categories
 import categoriesRouter from './app/api/v1/categories/router.js';
 const v1 = '/api/v1/cms';
 
@@ -11,6 +11,10 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+
 
 
 app.get('/', (req, res) => {
