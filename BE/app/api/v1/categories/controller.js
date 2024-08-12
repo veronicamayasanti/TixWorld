@@ -52,7 +52,7 @@ export const update = async (req, res, next) => {
                 _id: id 
             },
             { name },
-            { new: true, rupsert: true }
+            { new: true, runValidators: true }
         );
         res.status(200).json({
             data: result,
@@ -62,3 +62,16 @@ export const update = async (req, res, next) => {
         next(error);
     }
 }
+
+export const destroy = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const result = await Categories.findByIdAndDelete(id)
+        res.status(200).json({
+            data: result,
+            message: 'Category deleted successfully'
+        });
+    } catch (error) {
+        next(error);
+    }
+    }
