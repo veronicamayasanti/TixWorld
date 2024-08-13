@@ -1,10 +1,17 @@
-import Categories from './model.js';
+import {StatusCodes} from 'http-status-codes'
+import { 
+    getAllCategories, 
+    createCategories,
+    getOneCategories,
+    updateCategories,
+    deleteCategories
+}  from'../../../services/mongoose/categories.js'
 
 export const create = async (req, res, next) => {
     try {
-        const { name } = req.body;
-        const result = await Categories.create({ name });
-        res.status(201).json({
+       
+        const result = await createCategories(req);
+        res.status(StatusCodes.CREATED).json({
             message: 'Category created successfully',
             data: result
         });
@@ -16,9 +23,8 @@ export const create = async (req, res, next) => {
 
 export const index = async (req, res, next) => {
     try {
-        const result = await Categories.find().select('_id name');
-        res.status(200).json({
-            message: 'Category fetched successfully',
+        const result = await getAllCategories();
+        res.status(StatusCodes.OK).json({
             data: result
         });
     } catch (error) {
@@ -29,12 +35,9 @@ export const index = async (req, res, next) => {
 
 export const find = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        const result = await Categories.findOne({ _id: id });
-        if (!result) return res.status(404).json({
-            message: 'Category not found'
-        })
-        res.status(200).json({
+
+        const result = await getOneCategories(req);
+        res.status(StatusCodes.OK).json({
             data: result
         });
     } catch (error) {
@@ -45,16 +48,8 @@ export const find = async (req, res, next) => {
 
 export const update = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        const { name } = req.body;
-        const result = await Categories.findOneAndUpdate(
-            { 
-                _id: id 
-            },
-            { name },
-            { new: true, runValidators: true }
-        );
-        res.status(200).json({
+        const result = await updateCategories(req);
+        res.status(StatusCodes.OK).json({
             data: result,
             message: 'Category updated successfully'
         });
@@ -65,9 +60,9 @@ export const update = async (req, res, next) => {
 
 export const destroy = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        const result = await Categories.findByIdAndDelete(id)
-        res.status(200).json({
+        
+        const result = await deleteCategories(req);
+        res.status(StatusCodes.OK).json({
             data: result,
             message: 'Category deleted successfully'
         });
@@ -75,3 +70,4 @@ export const destroy = async (req, res, next) => {
         next(error);
     }
     }
+    

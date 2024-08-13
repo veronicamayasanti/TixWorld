@@ -6,6 +6,8 @@ import bodyParser from 'body-parser';
 const app = express();
 import categoriesRouter from './app/api/v1/categories/router.js';
 const v1 = '/api/v1/cms';
+import notFoundHandler from './app/middlewares/not-found.js';
+import errorHandlerMiddleware from './app/middlewares/handler-error.js';
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -24,6 +26,11 @@ app.get('/', (req, res) => {
 });
 
 app.use(v1, categoriesRouter);
+
+
+app.use(notFoundHandler);
+app.use(errorHandlerMiddleware);
+
 
 
 // catch 404 and forward to error handler
