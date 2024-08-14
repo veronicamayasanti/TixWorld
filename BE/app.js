@@ -5,7 +5,10 @@ import createError from 'http-errors';
 import bodyParser from 'body-parser';
 const app = express();
 import categoriesRouter from './app/api/v1/categories/router.js';
+import imagesRouter from './app/api/v1/images/router.js';
+
 const v1 = '/api/v1/cms';
+
 import notFoundHandler from './app/middlewares/not-found.js';
 import errorHandlerMiddleware from './app/middlewares/handler-error.js';
 
@@ -16,9 +19,6 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-
-
-
 app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Welcome to TixWorld'
@@ -26,6 +26,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(v1, categoriesRouter);
+app.use(v1, imagesRouter);
 
 
 app.use(notFoundHandler);
