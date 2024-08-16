@@ -1,13 +1,16 @@
 import mongoose from 'mongoose';
-const { Schema } = mongoose;
+const {model, Schema } = mongoose;
 
-let imageSchema = new Schema(
+const imageSchema = new  mongoose.Schema(
     {
     name: { type : String},
 },
     {
         timestamps: true
-    });
+    }
+);
+const Image = new mongoose.model('Image', imageSchema);
+
+export default Image
 
 
-export default mongoose.model('Images', imageSchema);

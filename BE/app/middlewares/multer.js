@@ -1,7 +1,7 @@
 import multer from 'multer';
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb)  {
+    destination:  (req, file, cb) => {
         cb(null, 'public/uploads/');
     },
     filename: (req, file, cb) => {
@@ -26,8 +26,8 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-const uploadMiddleware = multer({
-    storage,
+const uploadMiddleware = multer({ storage:  
+    storage, 
     limits: {
         fileSize: 5000000
     },
