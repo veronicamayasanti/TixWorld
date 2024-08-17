@@ -96,6 +96,6 @@ const checkingTalents = async (id) => {
     return result;
 };
 
-export { getAllTalents, createTalents, getOneTalents, updateTalents, deleteTalents };
+export { getAllTalents, createTalents, getOneTalents, updateTalents, deleteTalents, checkingTalents };
 
 
