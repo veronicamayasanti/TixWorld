@@ -1,11 +1,11 @@
-import createImages from '../../../services/mongoose/images.js'
+import  {createImages}  from '../../../services/mongoose/images.js'
 import { StatusCodes } from 'http-status-codes'
 
 const create = async (req, res, next) => {
     try {
         console.log('ini req file ',req.file);
         const result = await createImages(req);
-        res.status(StatusCodes.CREATED).json({
+        res.status(200).json({
             message: 'Image created successfully',
             data: result
         });

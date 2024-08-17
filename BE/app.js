@@ -10,6 +10,7 @@ import bodyParser from 'body-parser';
 const app = express();
 import categoriesRouter from './app/api/v1/categories/router.js';
 import imagesRouter from './app/api/v1/images/router.js';
+import talentsRouter from './app/api/v1/talents/router.js';
 
 const v1 = '/api/v1/cms';
 
@@ -32,6 +33,7 @@ app.get('/', (req, res) => {
 
 app.use(v1, categoriesRouter);
 app.use(v1, imagesRouter);
+app.use(v1, talentsRouter);
 
 
 app.use(notFoundHandler);

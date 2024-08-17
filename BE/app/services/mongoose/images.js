@@ -1,4 +1,5 @@
 import Images from '../../api/v1/images/model.js';
+import NotFoundError from '../../errors/not-found.js';
 
 
 // cara 2
@@ -10,7 +11,7 @@ import Images from '../../api/v1/images/model.js';
 
 
 // cara 1
-const createImages = async (req) => {
+export const createImages = async (req) => {
     try {
         const result = await Images.create({
             name: req.file
@@ -19,12 +20,16 @@ const createImages = async (req) => {
         })
         console.log('result', result);
         return result
-
     } catch (error) {
         console.log('error pada create images', error)
-
     }
-
 }
 
-export default createImages;
+export const checkingImage = async (id) => {
+    const result = await Images.findOne({ 
+        _id: id 
+    })
+    if (!result) throw new NotFoundError(`Image with id ${id} not found`)
+    return result
+};
+
