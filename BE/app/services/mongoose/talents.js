@@ -3,10 +3,10 @@ import {checkingImage} from './images.js';
 import BadRequestError from '../../errors/bad-request.js';
 import NotFoundError from '../../errors/not-found.js';
 
-const getAllTalents = async (req) => {
+const getAllTalents = async (req,res,next) => {
     // filter pencarian berdasarkan name 
-    const keyword = req?.query?.keyword || '';
-    console.log('keyword', keyword);
+    const { keyword } = req.query;
+    console.log(keyword);
     
     // awalnya condiotion adalah object kosong
     let condition = {};
@@ -14,16 +14,12 @@ const getAllTalents = async (req) => {
     if (keyword) {
         condition= {...condition, name: { $regex: keyword, $options: 'i' } };
     }
-    console.log('condition', condition);
-    
-
+    console.log('condition before query: ', condition);
     try {
-        const result = await Talents.find(condition)
-            .populate({
+        const result = await Talents.find(condition).populate({
                 path: 'image',
-                select: '__id name',
-            })
-            .select('__id name role image');
+                select: '_id name',
+            }).select('_id name role image');
         return result;
     } catch (error) {
         console.log('error', error);
