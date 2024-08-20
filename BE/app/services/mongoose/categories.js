@@ -3,7 +3,9 @@ import  BadRequestError  from '../../errors/bad-request.js';
 import NotFoundError from '../../errors/not-found.js';
 
 
-const getAllCategories = async () => {
+const getAllCategories = async (req) => {
+    console.log('req.user', req.user);
+    
     const result = await Categories.find();
     return result;
 };
