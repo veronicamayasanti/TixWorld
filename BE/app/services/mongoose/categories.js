@@ -6,7 +6,7 @@ import NotFoundError from '../../errors/not-found.js';
 const getAllCategories = async (req) => {
     console.log('req.user', req.user);
     
-    const result = await Categories.find();
+    const result = await Categories.find({ organizer: req.user.organizer });
     return result;
 };
 
@@ -19,13 +19,13 @@ const createCategories = async (req) => {
     if (check) throw new BadRequestError(`Category with name ${name} already exists`);
 
     // jika categories dengan name yang sama tidak ditemukan
-    const result = await Categories.create({name});
+    const result = await Categories.create({ name, organizer: req.user.organizer });
     return result;
 };
 
 const getOneCategories = async (req) => {
     const { id } = req.params;
-    const result = await Categories.findOne({ _id: id });
+    const result = await Categories.findOne({ _id: id, organizer: req.user.organizer });
     if(!result) throw new NotFoundError(`Category with id ${id} not found`);
     return result;
 }
@@ -33,10 +33,12 @@ const getOneCategories = async (req) => {
 const updateCategories = async (req) => {
     const { id } = req.params;
     const { name } = req.body;
+  
 
     // cari categories dengan field name dan id selain dari yang dikirim dari params
     const check = await Categories.findOne({ 
         name, 
+        organizer: req.user.organizer,
         _id: { $ne: id } 
     });
 
@@ -59,7 +61,8 @@ const updateCategories = async (req) => {
 const deleteCategories = async (req) => {
     const { id } = req.params;
     const result = await Categories.findOne({ 
-        _id: id 
+        _id: id,
+        organizer: req.user.organizer
     });
 
     if(!result) throw new NotFoundError(`Category with id ${id} not found`);
@@ -70,7 +73,7 @@ const deleteCategories = async (req) => {
 
 const checkingCategories = async (id) => {
     const result = await Categories.findOne({ 
-        _id: id 
+        _id: id
     })
     if (!result) throw new NotFoundError(`Category with id ${id} not found`)
     return result

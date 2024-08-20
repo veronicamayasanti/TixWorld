@@ -3,14 +3,14 @@ const router = express.Router();
 import  { create, index, find, update, destroy } from './controller.js';
 import { 
     authenticateUser, 
-    // authorizeRoles
+    authorizeRoles
  } from '../../../middlewares/auth.js'
 
-router.get('/categories', authenticateUser, index)
-router.get('/categories/:id', find)
-router.put('/categories/:id', update)
-router.delete('/categories/:id', destroy)
-router.post('/categories', create)
+router.get('/categories', authenticateUser, authorizeRoles('organizer'), index)
+router.get('/categories/:id', authenticateUser, find)
+router.put('/categories/:id', authenticateUser, update)
+router.delete('/categories/:id', authenticateUser, destroy)
+router.post('/categories', authenticateUser, create)
 
 
 export default router 
