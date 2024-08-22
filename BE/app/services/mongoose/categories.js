@@ -13,7 +13,7 @@ const getAllCategories = async (req) => {
 const createCategories = async (req) => {
     const { name } = req.body;
     // cari categories dengan name yang sama
-    const check = await Categories.findOne({ name });
+    const check = await Categories.findOne({ name, organizer: req.user.organizer });
 
     // jika categories dengan name yang sama ditemukan, kembalikan error
     if (check) throw new BadRequestError(`Category with name ${name} already exists`);

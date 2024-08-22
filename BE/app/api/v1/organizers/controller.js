@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { createOrganizer, createUsers } from "../../../services/mongoose/users.js";
+import { createOrganizer, createUsers, getAllUsers } from "../../../services/mongoose/users.js";
 
 
 
@@ -29,4 +29,17 @@ const createCMSUser = async (req, res, next) => {
     }
 };
 
-export { createCMSorganizer, createCMSUser };
+const getCMSUsers = async (req, res, next) => {
+    try {
+        const result = await getAllUsers(req);
+        res.status(StatusCodes.OK).json({
+            message: "Users fetched successfully",
+            data: result,
+        });
+    } catch (error) {
+        console.error("Error fetching users:", error.message);
+        next(error);
+    }
+};
+
+export { createCMSorganizer, createCMSUser, getCMSUsers };

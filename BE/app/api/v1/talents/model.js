@@ -18,6 +18,11 @@ const talentSchema = new  mongoose.Schema(
         ref: 'Image',
         required: [true, 'image harus diisi']
     },
+        organizer: {
+            type: mongoose.Types.ObjectId,
+            ref: 'Organizer',
+            required: [true, 'organizer harus diisi']
+        }
 },
     {
         timestamps: true

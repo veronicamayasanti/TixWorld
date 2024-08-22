@@ -71,6 +71,11 @@ const eventSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Talent',
         required: [true, 'talent harus diisi']
+    },
+     organizer: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Organizer',
+        required: [true, 'organizer harus diisi']
     }
 },
     {

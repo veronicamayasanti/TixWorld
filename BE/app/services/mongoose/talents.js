@@ -9,7 +9,7 @@ const getAllTalents = async (req,res,next) => {
     console.log(keyword);
     
     // awalnya condiotion adalah object kosong
-    let condition = {};
+    let condition = { organizer: req.user.organizer };
     // cek keywordnya true atau false, jadi keywordnya ada atau tidak
     if (keyword) {
         condition= {...condition, name: { $regex: keyword, $options: 'i' } };
@@ -34,19 +34,19 @@ const createTalents = async (req) => {
     await checkingImage(image);
 
     // cari talents dengan field name
-    const check = await Talents.findOne({ name });
+    const check = await Talents.findOne({ name, organizer: req.user.organizer });
 
     // jika talents dengan name yang sama ditemukan, kembalikan error
     if (check) throw new BadRequestError(`Talent with name ${name} already exists`);
 
     // jika talents dengan name yang sama tidak ditemukan, buat talents baru
-    const result = await Talents.create({ name, role, image });
+    const result = await Talents.create({ name, role, image, organizer: req.user.organizer });
     return result;
 }
 
 const getOneTalents = async (req) => {
     const { id } = req.params;
-    const result = await Talents.findOne({ _id: id })
+    const result = await Talents.findOne({ _id: id, organizer: req.user.organizer })
         .populate({
             path: 'image',
             select: '__id name',
@@ -64,6 +64,7 @@ const updateTalents = async (req) => {
     // cari talents dengan field name dan id selain dari yang dikirim dari params
     const check = await Talents.findOne({ 
         name, 
+        organizer: req.user.organizer,
         _id: { $ne: id } 
     });
 
@@ -73,7 +74,7 @@ const updateTalents = async (req) => {
     // jika talents dengan name yang sama tidak ditemukan, update talents
     const result = await Talents.findOneAndUpdate(
         { _id: id },
-        { name, role, image },
+        { name, role, image, organizer: req.user.organizer },
         { new: true, runValidators: true }
     );
 
@@ -84,7 +85,7 @@ const updateTalents = async (req) => {
 
 const deleteTalents = async (req) => {
     const { id } = req.params;
-    const result = await Talents.findOne({ _id: id });
+    const result = await Talents.findOne({ _id: id, organizer: req.user.organizer });
     if (!result) throw new NotFoundError(`Talent with id ${id} not found`);
     await Talents.deleteOne({ _id: id });
     return result;
