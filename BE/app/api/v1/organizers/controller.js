@@ -1,8 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { createOrganizer, createUsers, getAllUsers } from "../../../services/mongoose/users.js";
 
-
-
 const createCMSorganizer = async (req, res, next) => {
     try {
         const result = await createOrganizer(req);

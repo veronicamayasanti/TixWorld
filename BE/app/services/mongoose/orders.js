@@ -3,6 +3,10 @@ import Orders from '../../api/v1/orders/model.js';
 const getAllOrders = async () => {
     const {limit = 10, page = 1, startDate, endDate} = req.query;
     let condition = {};
+    // let match = {};
+    // if (req.user.role === 'owner'){
+    //     match = {_id: req.user.organizer}
+    // }
 
     if(startDate && endDate) {
         const start = new Date(startDate);
@@ -21,7 +25,7 @@ const getAllOrders = async () => {
 
     try {
         const result = await Orders.find(condition)
-        .populate({ path: 'event', match: {_id: req.user.organizer} })
+            .populate({ path: 'event', match: { organizer: req.user.organizer } })
         .limit(limit)
         .skip((page - 1) * limit)
 
