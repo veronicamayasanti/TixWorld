@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { create, index, find, update, destroy } from './controller.js';
+import { create, index, find, update, destroy, changeStatus } from './controller.js';
 import {
     authenticateUser,
     authorizeRoles
@@ -11,5 +11,7 @@ router.get('/events/:id', authenticateUser, authorizeRoles('organizer'), find)
 router.put('/events/:id', authenticateUser, authorizeRoles('organizer'), update)
 router.delete('/events/:id', authenticateUser, authorizeRoles('organizer'), destroy)
 router.post('/events', authenticateUser, authorizeRoles('organizer'), create)
+router.put('/events/:id/status', authenticateUser, authorizeRoles('organizer'), changeStatus)
+
 
 export default router;

@@ -7,10 +7,11 @@ import BadRequestError from '../../errors/bad-request.js';
 import Events from '../../api/v1/events/model.js';
 
 const getAllEvents = async (req) => {
-    const { keyword, category, telent } = req.query;
+    const { keyword, category, telent, status } = req.query;
 
-    let condition = {organizer: req.user.organizer
-};
+    let condition = {
+        organizer: req.user.organizer
+    };
 
     if (keyword) {
         condition = { ...condition, title: { $regex: keyword, $options: 'i' } };
@@ -22,6 +23,13 @@ const getAllEvents = async (req) => {
 
     if (telent) {
         condition = { ...condition, talent: telent };
+    }
+
+    if(['Draft', 'Published'].includes(status)) {
+        condition = {
+            ...condition,
+            statusEvent: status
+        }
     }
 
     try {
@@ -51,7 +59,7 @@ const createEvents = async (req) => {
         image,
         category,
         talent,
-       
+
     } = req.body;
 
     // cari image, category, talent dengan field id
@@ -138,9 +146,10 @@ const updateEvents = async (req) => {
         },
         { new: true, runValidators: true }
     );
-    
+
     return result;
 }
+
 
 const deleteEvents = async (req) => {
     const { id } = req.params;
@@ -150,10 +159,24 @@ const deleteEvents = async (req) => {
     return result;
 }
 
+
+const changeStatusEvents = async (req) => {
+    const { id } = req.params;
+    const { statusEvent } = req.body;
+
+    if (!['Draft', 'Published'].includes(statusEvent)) throw new BadRequestError(`statusEvent must be Draft, Published or Draft`);
+    const checkEvent = await Events.findOne({ _id: id, organizer: req.user.organizer });
+    if (!checkEvent) throw new NotFoundError(`Events with id ${id} not found`);
+    checkEvent.statusEvent = statusEvent;
+    await checkEvent.save();
+    return checkEvent;
+}
+
 export {
     getAllEvents,
     createEvents,
     getOneEvents,
     updateEvents,
-    deleteEvents
+    deleteEvents,
+    changeStatusEvents
 }

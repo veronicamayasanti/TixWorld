@@ -3,7 +3,8 @@ import {
     createEvents,
     getOneEvents,
     updateEvents,
-    deleteEvents
+    deleteEvents,
+    changeStatusEvents
 } from '../../../services/mongoose/events.js';
 
 import { StatusCodes } from 'http-status-codes';
@@ -72,4 +73,17 @@ const destroy = async (req, res, next) => {
     }
 };
 
-export { create, index, find, update, destroy }
+const changeStatus = async (req, res, next) => {
+    try {
+        const result = await changeStatusEvents(req);
+        res.status(StatusCodes.OK).json({
+            message: 'Event status changed successfully',
+            data: result
+        });
+    } catch (error) {
+        console.error("Error changing event status:", error.message);
+        next(error);
+    }
+}
+
+export { create, index, find, update, destroy, changeStatus }
