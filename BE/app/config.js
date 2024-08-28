@@ -7,3 +7,6 @@ export const jwtExpiration = '24h'
 
 export const jwtSecret = "jwtSecret"
 
+export const gmail = process.env.GMAIL
+export const password = process.env.PASSWORD
+
