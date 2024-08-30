@@ -1,4 +1,4 @@
-import Participants from "../../api/v1/participants/model";
+import Participants from "../../api/v1/participants/model.js";
 import NotFoundError from '../../errors/not-found.js';
 import BadRequestError from '../../errors/bad-request.js';
 import UnauthenticatedError from '../../errors/unauthenticated.js';
@@ -33,7 +33,24 @@ const signupParticipant = async (req) => {
     delete result._doc.password;
 
     return result;
+}
+
+
+const activateParticipant = async (req) => {
+    const { email, otp } = req.body;
+    const check = await Participants.findOne({ email });
+
+    if (!check) {
+        throw new NotFoundError(`Participant with email ${email} not found`);
     }
 
+    if (check && check.otp !== otp) {
+        throw new BadRequestError('Invalid OTP');
+    }
 
-export default signupParticipant
+    const result = await Participants.findOneAndUpdate(check._id, { status: 'aktif' }, { new: true });
+    delete result._doc.password;
+     return result;
+}
+
+export  { signupParticipant, activateParticipant }

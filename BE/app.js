@@ -14,8 +14,9 @@ import talentsRouter from './app/api/v1/talents/router.js';
 import eventsRouter from './app/api/v1/events/router.js';
 import organizersRouter from './app/api/v1/organizers/router.js';
 import authCmsRouter from './app/api/v1/auth/router.js';
+import participantsRouter from './app/api/v1/participants/router.js';
 
-const v1 = '/api/v1/cms';
+const v1 = '/api/v1/';
 
 import notFoundHandler from './app/middlewares/not-found.js';
 import errorHandlerMiddleware from './app/middlewares/handler-error.js';
@@ -34,12 +35,13 @@ app.get('/', (req, res) => {
   })
 });
 
-app.use(v1, categoriesRouter);
-app.use(v1, imagesRouter);
-app.use(v1, talentsRouter);
-app.use(v1, eventsRouter);
-app.use(v1, organizersRouter);
-app.use(v1, authCmsRouter);
+app.use(`${v1}/cms`, categoriesRouter);
+app.use(`${v1}/cms`, imagesRouter);
+app.use(`${v1}/cms`, talentsRouter);
+app.use(`${v1}/cms`, eventsRouter);
+app.use(`${v1}/cms`, organizersRouter);
+app.use(`${v1}/cms`, authCmsRouter);
+app.use(`${v1}`, participantsRouter);
 
 
 app.use(notFoundHandler);
