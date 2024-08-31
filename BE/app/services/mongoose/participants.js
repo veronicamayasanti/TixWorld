@@ -1,4 +1,6 @@
 import Participants from "../../api/v1/participants/model.js";
+import {createTokenParticipant, } from "../../utils/createTokenUser.js"
+import  otpMail  from "../mail/index.js"
 import NotFoundError from '../../errors/not-found.js';
 import BadRequestError from '../../errors/bad-request.js';
 import UnauthenticatedError from '../../errors/unauthenticated.js';
@@ -50,7 +52,34 @@ const activateParticipant = async (req) => {
 
     const result = await Participants.findOneAndUpdate(check._id, { status: 'aktif' }, { new: true });
     delete result._doc.password;
+    delete result._doc.otp;
      return result;
 }
 
-export  { signupParticipant, activateParticipant }
+const signinParticipant = async (req) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+        throw new BadRequestError("Please provide email and password");
+    }
+
+    const result = await Participants.findOne({ email: email });
+
+    if (!result) {
+        throw new UnauthenticatedError("Invalid credentials");
+    }
+
+    if (result.status !== 'tidak aktif') {
+        throw new UnauthenticatedError("Please activate your account");
+    }
+
+    const isPasswordCorrect = await result.comparePassword(password);
+
+    if (!isPasswordCorrect) {
+        throw new UnauthenticatedError("Invalid credentials");
+    }
+
+    const token = createJWT({ payload: createTokenParticipant(result) });
+    return token;
+}
+
+export  { signupParticipant, activateParticipant, signinParticipant }

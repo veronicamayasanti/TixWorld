@@ -1,4 +1,4 @@
-import { signupParticipant, activateParticipant } from "../../../services/mongoose/participants.js";
+import { signupParticipant, activateParticipant, signinParticipant } from "../../../services/mongoose/participants.js";
 import { StatusCodes } from "http-status-codes";
 
 const signup = async (req, res, next) => {
@@ -23,4 +23,15 @@ const activeParticipant = async (req, res, next) => {
     }
 };
 
-export {signup, activeParticipant}
+const signin = async (req, res, next) => {
+    try {
+        const result = await signinParticipant(req);
+        res.status(StatusCodes.OK).json({
+            data: { token: result}
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export { signup, activeParticipant, signin }

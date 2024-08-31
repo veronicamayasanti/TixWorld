@@ -1,4 +1,4 @@
-export const createTokenUsers = (user) => {
+ const createTokenUsers = (user) => {
     return {
         name: user.name,
         userId: user._id,
@@ -8,4 +8,13 @@ export const createTokenUsers = (user) => {
     }
 }
 
-export default createTokenUsers
+ const createTokenParticipant = (participant) => {
+    return {
+        lasName: participant.lasName,
+        participantId: participant._id,
+        firstName: participant.firstName,
+        email: participant.email
+    }
+}
+
+export { createTokenUsers, createTokenParticipant }
