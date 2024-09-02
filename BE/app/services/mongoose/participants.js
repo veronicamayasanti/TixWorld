@@ -1,6 +1,8 @@
 import Participants from "../../api/v1/participants/model.js";
-import {createTokenParticipant, } from "../../utils/createTokenUser.js"
-import  otpMail  from "../mail/index.js"
+import Events from "../../api/v1/events/model.js";
+import Orders from "../../api/v1/orders/model.js";
+import { createTokenParticipant, } from "../../utils/createTokenUser.js"
+import otpMail from "../mail/index.js"
 import NotFoundError from '../../errors/not-found.js';
 import BadRequestError from '../../errors/bad-request.js';
 import UnauthenticatedError from '../../errors/unauthenticated.js';
@@ -53,7 +55,7 @@ const activateParticipant = async (req) => {
     const result = await Participants.findOneAndUpdate(check._id, { status: 'aktif' }, { new: true });
     delete result._doc.password;
     delete result._doc.otp;
-     return result;
+    return result;
 }
 
 const signinParticipant = async (req) => {
@@ -82,4 +84,29 @@ const signinParticipant = async (req) => {
     return token;
 }
 
-export  { signupParticipant, activateParticipant, signinParticipant }
+const getAllEvents = async (req) => {
+    const result = await Events.find({statusEvent: 'Published'})
+    .populate('category')
+    .populate('image')
+    .select('_id title date tickts veneueName')
+    return result;
+}
+
+const getOneEvents = async (req) => {
+    const {id} = req.params
+    const result = await Events.findOne({ _id: id })
+    .populate('category')
+    .populate('talent')
+    .populate('image');
+
+    if (!result) throw new NotFoundError(`Events with id ${req.params.id} not found`);
+    return result
+}
+
+const getAllOrders = async (req) => {
+    const result = await Orders.find({ participant: req.user._id })
+    
+    return result
+}
+
+export { signupParticipant, activateParticipant, signinParticipant, getAllEvents, getOneEvents, getAllOrders }

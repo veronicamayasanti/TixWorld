@@ -1,4 +1,4 @@
-import { signupParticipant, activateParticipant, signinParticipant } from "../../../services/mongoose/participants.js";
+import { signupParticipant, activateParticipant, signinParticipant, getAllEvents, getOneEvents, getAllOrders } from "../../../services/mongoose/participants.js";
 import { StatusCodes } from "http-status-codes";
 
 const signup = async (req, res, next) => {
@@ -34,4 +34,37 @@ const signin = async (req, res, next) => {
     }
 };
 
-export { signup, activeParticipant, signin }
+const getAlllandingPage = async (req, res, next) => {
+    try {
+        const result = await getAllEvents(req);
+        res.status(StatusCodes.OK).json({
+            data: result
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const getDashboard = async (req, res, next) => {
+    try {
+        const result = await getAllOrders(req);
+        res.status(StatusCodes.OK).json({
+            data: result
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const getDetailLandingPage = async (req, res, next) => {
+    try {
+        const result = await getOneEvents(req);
+        res.status(StatusCodes.OK).json({
+            data: result
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export { signup, activeParticipant, signin, getAlllandingPage, getDashboard, getDetailLandingPage }

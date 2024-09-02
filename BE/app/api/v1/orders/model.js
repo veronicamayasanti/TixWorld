@@ -99,15 +99,6 @@ const orderSchema = new mongoose.Schema({
         keyPoint: {
             type: [String]
         },
-        statusEvent: {
-            type: String,
-            enum: ['Draft', 'Published'],
-            default: 'Draft'
-        },
-        tickets: {
-            type: [ticketCategoriesSchema],
-            required: true
-        },
         image: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Image',
@@ -138,4 +129,4 @@ const orderSchema = new mongoose.Schema({
 
 const Order = mongoose.model('Order', orderSchema)
 
-export default Order
+export default Order 
